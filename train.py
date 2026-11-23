@@ -27,7 +27,7 @@ TRAIN_CONFIG = dict(
     margin=22,
     search_radius_mm=10.,    # 计划中心各轴±10mm；超范围状态不参与训练
     positive_radius=16./3.,
-    center_label='disk',
+    center_label='gaussian',
     gaussian_sigma=8./3.,    # 完整DRR像素，默认等于圆形正区域半径的一半
     device='auto',
     num_workers=4,
@@ -177,8 +177,7 @@ def main():
         parser.add_argument('--'+name.replace('_', '-'), type=int, default=TRAIN_CONFIG[name])
     for name in ('lr', 'search_radius_mm', 'positive_radius', 'gaussian_sigma'):
         parser.add_argument('--'+name.replace('_', '-'), type=float, default=TRAIN_CONFIG[name])
-    parser.add_argument('--center-label', choices=['disk', 'gaussian'], default=TRAIN_CONFIG['center_label'],
-                        help='圆形硬标签或高斯软标签；新训练均使用模板对齐搜索网格')
+    parser.set_defaults(center_label=TRAIN_CONFIG['center_label'])
     parser.add_argument('--device', default=TRAIN_CONFIG['device'])
     parser.add_argument('--limit-patients', type=int, default=None, help='小规模试运行；正式训练不指定')
     parser.add_argument('--check-only', action='store_true', help='只检查一个批次前向，不训练、不保存输出')
